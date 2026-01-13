@@ -1,4 +1,4 @@
-import { mockInquiries } from "@/data";
+import { KanbanBoard } from "@/components/KanbanBoard/KanbanBoard";
 
 export default function HomePage() {
   return (
@@ -8,14 +8,12 @@ export default function HomePage() {
           Inquiry Kanban Board
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Frontend Developer Assessment – Kanban view for hotel inquiries.
+          Frontend Developer Assessment
         </p>
       </header>
 
-      <section className="px-6 py-6 space-y-2">
-        <p className="text-xs text-slate-500">
-          Currently loaded mock inquiries: {mockInquiries.length}
-        </p>
+      <section className="px-6 py-6">
+        <KanbanBoard />
       </section>
     </main>
   );

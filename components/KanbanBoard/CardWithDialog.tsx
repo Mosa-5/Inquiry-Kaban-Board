@@ -17,8 +17,6 @@ interface Props {
   inquiry: Inquiry;
 }
 
-
-
 export function CardWithDialog({ inquiry }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -31,7 +29,7 @@ export function CardWithDialog({ inquiry }: Props) {
           <DialogHeader>
             <DialogTitle>{inquiry.clientName}</DialogTitle>
             <DialogDescription>
-              {inquiry.eventType} – {inquiry.guestCount} guests
+              {inquiry.eventType} - {inquiry.guestCount} guests
             </DialogDescription>
           </DialogHeader>
 

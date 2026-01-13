@@ -1,7 +1,7 @@
 import { Inquiry } from "@/types";
 
 export const mockInquiries: Inquiry[] = [
-  // 1 — NEW (updated: 1 day ago)
+  // 1 - NEW (updated: 1 day ago)
   {
     id: "1",
     clientName: "Acme Corporation",
@@ -17,7 +17,7 @@ export const mockInquiries: Inquiry[] = [
     updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
   },
 
-  // 2 — SENT TO HOTELS (updated: 3 days ago, high-value)
+  // 2 - SENT TO HOTELS (updated: 3 days ago, high-value)
   {
     id: "2",
     clientName: "Global Ventures",
@@ -33,7 +33,7 @@ export const mockInquiries: Inquiry[] = [
     updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
   },
 
-  // 3 — OFFERS RECEIVED (updated: 5 hours ago, high-value)
+  // 3 - OFFERS RECEIVED (updated: 5 hours ago, high-value)
   {
     id: "3",
     clientName: "TechStars Meetup",
@@ -49,10 +49,10 @@ export const mockInquiries: Inquiry[] = [
     updatedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
   },
 
-  // 4 — COMPLETED (updated: less than a minute ago, high-value)
+  // 4 - COMPLETED (updated: less than a minute ago, high-value)
   {
     id: "4",
-    clientName: "Family Wedding – Klein",
+    clientName: "Family Wedding - Klein",
     contactPerson: "Sara Klein",
     eventType: "Wedding",
     eventDate: "2026-06-12",
@@ -66,33 +66,32 @@ export const mockInquiries: Inquiry[] = [
   },
 
   {
-  id: "5",
-  clientName: "Optimus Events",
-  contactPerson: "Maya Chen",
-  eventType: "Product Launch",
-  eventDate: "2026-04-14",
-  guestCount: 200,
-  potentialValue: 72000,
-  phase: "new",
-  hotels: ["City Center Hotel"],
-  notes: "Needs LED wall and media coverage.",
-  createdAt: "2026-01-05T10:00:00.000Z",
-  updatedAt: "2025-12-20T09:30:00.000Z"  // OLD DATE → should show absolute date
-},
+    id: "5",
+    clientName: "Optimus Events",
+    contactPerson: "Maya Chen",
+    eventType: "Product Launch",
+    eventDate: "2026-04-14",
+    guestCount: 200,
+    potentialValue: 72000,
+    phase: "new",
+    hotels: ["City Center Hotel"],
+    notes: "Needs LED wall and media coverage.",
+    createdAt: "2026-01-05T10:00:00.000Z",
+    updatedAt: "2025-12-20T09:30:00.000Z"  // OLD DATE -> should show absolute date
+  },
 
-{
-  id: "6",
-  clientName: "Test Relative Date",
-  contactPerson: "QA Tester",
-  eventType: "Demo Event",
-  eventDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
-  guestCount: 10,
-  potentialValue: 1000,
-  phase: "new",
-  hotels: [],
-  notes: "Testing relative date for eventDate",
-  createdAt: "2026-01-05T10:00:00.000Z",
-  updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
-}
-
+  {
+    id: "6",
+    clientName: "Test Relative Date",
+    contactPerson: "QA Tester",
+    eventType: "Demo Event",
+    eventDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+    guestCount: 10,
+    potentialValue: 1000,
+    phase: "new",
+    hotels: [],
+    notes: "Testing relative date for eventDate",
+    createdAt: "2026-01-05T10:00:00.000Z",
+    updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
+  },
 ];

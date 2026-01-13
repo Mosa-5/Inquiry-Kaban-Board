@@ -1,3 +1,5 @@
+import type { HTMLAttributes, ReactNode } from "react";
+
 export type InquiryPhase =
   | "new"
   | "sent_to_hotels"
@@ -20,3 +22,11 @@ export interface Inquiry {
 }
 
 export type FallbackValue = string | number | string[] | null | undefined;
+
+export interface ColumnProps extends HTMLAttributes<HTMLDivElement> {
+  title: string;
+  inquiries: Inquiry[];
+  phase: InquiryPhase;
+  children?: ReactNode;
+  isDraggingOver?: boolean;
+}

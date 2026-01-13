@@ -1,10 +1,7 @@
-import { Inquiry } from "@/types";
+import type { CardProps } from "@/types";
 import { formatSmartDate } from "@/utils/date";
-
-interface CardProps {
-  inquiry: Inquiry;
-  onClick?: () => void;
-}
+import { CalendarDays, Users } from "lucide-react";
+import { phaseAccentBorder } from "./kanbanConfig";
 
 export function Card({ inquiry, onClick }: CardProps) {
   const displayEventDate = formatSmartDate(inquiry.eventDate);
@@ -13,25 +10,42 @@ export function Card({ inquiry, onClick }: CardProps) {
   return (
     <div
       onClick={onClick}
-      className="bg-slate-800 rounded-md p-4 hover:bg-slate-700 transition cursor-pointer"
+      className={`rounded-xl border bg-slate-900/80 p-4 shadow-sm transition hover:border-slate-600 hover:bg-slate-800 cursor-pointer ${
+        phaseAccentBorder[inquiry.phase] || "border-slate-800"
+      }`}
     >
-      <div className="flex justify-between items-center">
-        <h3 className="font-medium">{inquiry.clientName}</h3>
-
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-base font-semibold text-slate-100">
+            {inquiry.clientName}
+          </h3>
+          <span className="mt-1 inline-flex items-center rounded-full bg-slate-800 px-2 py-0.5 text-xs text-slate-300">
+            {inquiry.eventType}
+          </span>
+        </div>
         {inquiry.potentialValue > 50000 && (
-          <span className="text-xs bg-amber-900 text-amber-300 px-2 py-1 rounded">
-            High
+          <span className="rounded-full bg-amber-500/20 px-2 py-1 text-[11px] font-semibold text-amber-300">
+            High value
           </span>
         )}
       </div>
 
-      <p className="text-slate-400 text-sm mt-1">{inquiry.eventType}</p>
+      <div className="mt-4 space-y-2 text-xs text-slate-400">
+        <div className="flex items-center gap-2">
+          <CalendarDays className="h-3.5 w-3.5" />
+          <span>{displayEventDate}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Users className="h-3.5 w-3.5" />
+          <span>{inquiry.guestCount} guests</span>
+        </div>
+      </div>
 
-      <div className="text-xs text-slate-500 mt-2 flex flex-col gap-1">
-        <span>Date: {displayEventDate}</span>
-        <span>Guests: {inquiry.guestCount}</span>
-        <span>Value: CHF {inquiry.potentialValue.toLocaleString()}</span>
-        <span>Updated: {displayUpdatedDate}</span>
+      <div className="mt-4 flex items-center justify-between border-t border-slate-800 pt-3 text-xs">
+        <span className="font-semibold text-amber-300">
+          CHF {inquiry.potentialValue.toLocaleString()}
+        </span>
+        <span className="text-slate-500">{displayUpdatedDate}</span>
       </div>
     </div>
   );

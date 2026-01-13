@@ -3,7 +3,7 @@ import { Inquiry } from "@/types";
 export const mockInquiries: Inquiry[] = [
   // 1 - NEW (updated: 1 day ago)
   {
-    id: "1",
+    id: "INQ-2026-0001",
     clientName: "Acme Corporation",
     contactPerson: "John Doe",
     eventType: "Corporate Conference",
@@ -19,7 +19,7 @@ export const mockInquiries: Inquiry[] = [
 
   // 2 - SENT TO HOTELS (updated: 3 days ago, high-value)
   {
-    id: "2",
+    id: "INQ-2026-0002",
     clientName: "Global Ventures",
     contactPerson: "Anna Smith",
     eventType: "Incentive Trip",
@@ -35,7 +35,7 @@ export const mockInquiries: Inquiry[] = [
 
   // 3 - OFFERS RECEIVED (updated: 5 hours ago, high-value)
   {
-    id: "3",
+    id: "INQ-2026-0003",
     clientName: "TechStars Meetup",
     contactPerson: "Leo Brown",
     eventType: "Networking Event",
@@ -51,7 +51,7 @@ export const mockInquiries: Inquiry[] = [
 
   // 4 - COMPLETED (updated: less than a minute ago, high-value)
   {
-    id: "4",
+    id: "INQ-2026-0004",
     clientName: "Family Wedding - Klein",
     contactPerson: "Sara Klein",
     eventType: "Wedding",
@@ -66,7 +66,7 @@ export const mockInquiries: Inquiry[] = [
   },
 
   {
-    id: "5",
+    id: "INQ-2026-0005",
     clientName: "Optimus Events",
     contactPerson: "Maya Chen",
     eventType: "Product Launch",
@@ -81,7 +81,7 @@ export const mockInquiries: Inquiry[] = [
   },
 
   {
-    id: "6",
+    id: "INQ-2026-0006",
     clientName: "Test Relative Date",
     contactPerson: "QA Tester",
     eventType: "Demo Event",

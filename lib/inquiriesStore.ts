@@ -8,10 +8,18 @@ const PHASES: InquiryPhase[] = [
   "completed",
 ];
 
-const inquiries: Inquiry[] = mockInquiries.map((inq) => ({
-  ...inq,
-  hotels: [...inq.hotels],
-}));
+const seedInquiries = () =>
+  mockInquiries.map((inq) => ({
+    ...inq,
+    hotels: [...inq.hotels],
+  }));
+
+declare global {
+  var __inquiriesStore: Inquiry[] | undefined;
+}
+
+const inquiries: Inquiry[] = globalThis.__inquiriesStore ?? seedInquiries();
+globalThis.__inquiriesStore = inquiries;
 
 export function isInquiryPhase(value: unknown): value is InquiryPhase {
   return typeof value === "string" && PHASES.includes(value as InquiryPhase);

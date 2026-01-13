@@ -37,3 +37,8 @@ export interface ColumnProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   isDraggingOver?: boolean;
 }
+
+export interface CardProps {
+  inquiry: Inquiry;
+  onClick?: () => void;
+}

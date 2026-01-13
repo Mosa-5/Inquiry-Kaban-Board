@@ -4,49 +4,18 @@ import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useInquiriesStore } from "@/lib/inquiriesClientStore";
 import type { InquiryFilters } from "@/types";
+import { CalendarDays, ChevronDownIcon, Filter, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  buildQuery,
+  formatDateLabel,
+  normalizeDate,
+  toDate,
+} from "./filterUtils";
 
-export function buildFilters(params: URLSearchParams): InquiryFilters {
-  const minValueParam = params.get("minValue");
-  const minValue = minValueParam ? Number(minValueParam) : undefined;
-  const startDate = normalizeDate(params.get("startDate") || "");
-  const endDate = normalizeDate(params.get("endDate") || "");
-
-  return {
-    client: params.get("client") || undefined,
-    minValue: Number.isFinite(minValue) ? minValue : undefined,
-    startDate: startDate || undefined,
-    endDate: endDate || undefined,
-  };
-}
-
-function buildQuery(filters: InquiryFilters) {
-  const params = new URLSearchParams();
-  if (filters.client) params.set("client", filters.client);
-  if (typeof filters.minValue === "number") {
-    params.set("minValue", String(filters.minValue));
-  }
-  if (filters.startDate) params.set("startDate", filters.startDate);
-  if (filters.endDate) params.set("endDate", filters.endDate);
-  return params.toString();
-}
-
-function normalizeDate(value: string) {
-  if (!value) return "";
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-  if (value.includes("T")) {
-    const slice = value.slice(0, 10);
-    return /^\d{4}-\d{2}-\d{2}$/.test(slice) ? slice : "";
-  }
-
-  const parsed = new Date(value);
-  if (!Number.isNaN(parsed.getTime())) {
-    const year = parsed.getUTCFullYear();
-    if (year < 1000 || year > 9999) return "";
-    return parsed.toISOString().slice(0, 10);
-  }
-
-  return "";
-}
 
 interface FilterPanelProps {
   initialFilters: InquiryFilters;
@@ -65,6 +34,8 @@ export function FilterPanel({ initialFilters }: FilterPanelProps) {
   );
   const [startDate, setStartDate] = useState(initialFilters.startDate || "");
   const [endDate, setEndDate] = useState(initialFilters.endDate || "");
+  const [startOpen, setStartOpen] = useState(false);
+  const [endOpen, setEndOpen] = useState(false);
 
   const activeCount = useMemo(() => {
     let count = 0;
@@ -74,6 +45,19 @@ export function FilterPanel({ initialFilters }: FilterPanelProps) {
     if (endDate.trim()) count += 1;
     return count;
   }, [client, minValue, startDate, endDate]);
+
+  const handleDateSelect = (
+    setter: (value: string) => void,
+    value: Date | undefined,
+    close: () => void
+  ) => {
+    if (!value) {
+      setter("");
+      return;
+    }
+    setter(value.toISOString().slice(0, 10));
+    close();
+  };
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -122,70 +106,124 @@ export function FilterPanel({ initialFilters }: FilterPanelProps) {
   };
 
   return (
-    <div className="mb-6 rounded-lg border border-slate-800 bg-slate-900 p-4">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-slate-300">Client name</span>
-            <input
+    <div className="mb-6 rounded-xl border border-slate-800 bg-slate-900/70 p-4">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+        <div className="flex flex-1 flex-col gap-3 lg:flex-row lg:items-center">
+          <div className="flex flex-1 items-center gap-2 rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 lg:max-w-[320px]">
+            <Search className="h-4 w-4 text-slate-500" />
+            <Input
+              id="client-name"
               value={client}
               onChange={(event) => setClient(event.target.value)}
-              placeholder="Search clients"
-              className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500"
+              placeholder="Search by client name..."
+              className="h-6 border-0 bg-transparent p-0 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:ring-0"
             />
-          </label>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 lg:flex-nowrap">
+            <Popover open={startOpen} onOpenChange={setStartOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  id="start-date"
+                  className="h-10 w-full cursor-pointer justify-between border-slate-800 bg-slate-950 text-slate-200 hover:bg-slate-900 hover:text-slate-200 sm:w-[220px]"
+                >
+                  <span className="flex items-center gap-2">
+                    <CalendarDays className="h-4 w-4 text-slate-500" />
+                    {toDate(startDate)
+                      ? formatDateLabel(startDate)
+                      : "From date"}
+                  </span>
+                  <ChevronDownIcon className="h-4 w-4 text-slate-500" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-[--radix-popover-trigger-width] overflow-hidden p-0"
+                align="start"
+              >
+                <Calendar
+                  mode="single"
+                  captionLayout="dropdown"
+                  selected={toDate(startDate)}
+                  className="w-full"
+                  classNames={{
+                    root: "w-full",
+                    months: "w-full",
+                    month: "w-full",
+                    table: "w-full",
+                  }}
+                  onSelect={(value) =>
+                    handleDateSelect(setStartDate, value, () =>
+                      setStartOpen(false)
+                    )
+                  }
+                />
+              </PopoverContent>
+            </Popover>
 
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-slate-300">Minimum value</span>
-            <input
-              value={minValue}
-              onChange={(event) => setMinValue(event.target.value)}
-              inputMode="numeric"
-              placeholder="CHF 0"
-              className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500"
-            />
-          </label>
+            <Popover open={endOpen} onOpenChange={setEndOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  id="end-date"
+                  className="h-10 w-full cursor-pointer justify-between border-slate-800 bg-slate-950 text-slate-200 hover:bg-slate-900 hover:text-slate-200 sm:w-[220px]"
+                >
+                  <span className="flex items-center gap-2">
+                    <CalendarDays className="h-4 w-4 text-slate-500" />
+                    {toDate(endDate) ? formatDateLabel(endDate) : "To date"}
+                  </span>
+                  <ChevronDownIcon className="h-4 w-4 text-slate-500" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-[--radix-popover-trigger-width] overflow-hidden p-0"
+                align="start"
+              >
+                <Calendar
+                  mode="single"
+                  captionLayout="dropdown"
+                  selected={toDate(endDate)}
+                  className="w-full"
+                  classNames={{
+                    root: "w-full",
+                    months: "w-full",
+                    month: "w-full",
+                    table: "w-full",
+                  }}
+                  onSelect={(value) =>
+                    handleDateSelect(setEndDate, value, () =>
+                      setEndOpen(false)
+                    )
+                  }
+                />
+              </PopoverContent>
+            </Popover>
 
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-slate-300">Start date</span>
-            <input
-              value={startDate}
-              onChange={(event) => {
-                setStartDate(event.target.value);
-              }}
-              onBlur={() =>
-                setStartDate((current) => normalizeDate(current))
-              }
-              type="date"
-              className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
-            />
-          </label>
-
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-slate-300">End date</span>
-            <input
-              value={endDate}
-              onChange={(event) => {
-                setEndDate(event.target.value);
-              }}
-              onBlur={() => setEndDate((current) => normalizeDate(current))}
-              type="date"
-              className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
-            />
-          </label>
+            <div className="flex w-full items-center gap-2 rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 sm:w-[160px]">
+              <Filter className="h-4 w-4 text-slate-500" />
+              <Input
+                id="min-value"
+                value={minValue}
+                onChange={(event) => setMinValue(event.target.value)}
+                inputMode="numeric"
+                placeholder="Min value"
+                className="h-6 border-0 bg-transparent p-0 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:ring-0"
+              />
+            </div>
+          </div>
         </div>
-
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between gap-3 lg:justify-end">
           <span className="text-xs text-slate-400">
             {activeCount} filters
           </span>
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={handleClear}
-            className="rounded-md border border-slate-700 px-3 py-2 text-xs font-medium text-slate-200 transition hover:border-slate-500 hover:text-white"
+            className="cursor-pointer border-slate-800 bg-slate-950 text-slate-200 hover:bg-slate-900 hover:text-slate-200"
           >
             Clear filters
-          </button>
+          </Button>
         </div>
       </div>
     </div>

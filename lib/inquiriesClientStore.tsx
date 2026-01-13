@@ -67,7 +67,18 @@ export function InquiriesProvider({ children }: { children: ReactNode }) {
         throw new Error(`Request failed (${response.status})`);
       }
       const payload = (await response.json()) as { data: Inquiry[] };
-      setInquiries(payload.data);
+      setInquiries((current) => {
+        const currentById = new Map(current.map((inq) => [inq.id, inq]));
+        return payload.data.map((incoming) => {
+          const existing = currentById.get(incoming.id);
+          if (!existing) return incoming;
+
+          const existingTime = new Date(existing.updatedAt).getTime();
+          const incomingTime = new Date(incoming.updatedAt).getTime();
+
+          return existingTime > incomingTime ? existing : incoming;
+        });
+      });
     } catch (err) {
       if ((err as Error).name !== "AbortError") {
         setError((err as Error).message);

@@ -2,31 +2,40 @@
 
 import { useState } from "react";
 import { Card } from "./Card";
-import { Inquiry } from "@/types";
+import type { Inquiry } from "@/types";
 import { fallback } from "@/utils/fallback";
 import { formatAbsolute, formatSmartDate } from "@/utils/date";
 import { useInquiriesStore } from "@/lib/inquiriesClientStore";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  CalendarDays,
+  CircleDollarSign,
+  Hotel,
+  Mail,
+  Tag,
+  Users,
+} from "lucide-react";
+import {
+  phaseAccentBorder,
+  phaseAccentText,
+  phaseOptions,
+} from "./kanbanConfig";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from "@/components/ui/dialog";
 
-interface Props {
-  inquiry: Inquiry;
-}
 
-const phaseOptions = [
-  { value: "new", label: "New" },
-  { value: "sent_to_hotels", label: "Sent to Hotels" },
-  { value: "offers_received", label: "Offers Received" },
-  { value: "completed", label: "Completed" },
-];
-
-export function CardWithDialog({ inquiry }: Props) {
+export function CardWithDialog({ inquiry }: { inquiry: Inquiry;}) {
   const [open, setOpen] = useState(false);
   const { updatePhase, loading } = useInquiriesStore();
 
@@ -40,79 +49,133 @@ export function CardWithDialog({ inquiry }: Props) {
       <Card inquiry={inquiry} onClick={() => setOpen(true)} />
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>{inquiry.clientName}</DialogTitle>
-            <DialogDescription>
-              {inquiry.eventType} - {inquiry.guestCount} guests
+        <DialogContent
+          className={`max-w-[calc(100%-2rem)] sm:max-w-xl bg-slate-950 text-slate-100 border ${phaseAccentBorder[inquiry.phase]} max-h-[90vh] overflow-y-auto`}
+        >
+          <DialogHeader className="space-y-1">
+            <p className="text-xs text-slate-500">ID: {inquiry.id}</p>
+            <DialogTitle className="text-2xl">{inquiry.clientName}</DialogTitle>
+            <DialogDescription className="text-slate-500">
+              {inquiry.eventType}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3 text-sm text-slate-700 dark:text-slate-300">
-            <p>
-              <strong>Date:</strong> {fallback(inquiry.eventDate)}
-            </p>
+          <section className="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <p className={`text-xs font-semibold ${phaseAccentText[inquiry.phase]}`}>
+                  Current phase
+                </p>
+                <div className="mt-2">
+                  <Select
+                    value={inquiry.phase}
+                    onValueChange={handlePhaseChange}
+                    disabled={loading}
+                  >
+                    <SelectTrigger className={`bg-slate-950 text-slate-100 ${phaseAccentBorder[inquiry.phase]}`}>
+                      <SelectValue placeholder="Select phase" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {phaseOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
 
-            <p>
-              <strong>Value:</strong> CHF {inquiry.potentialValue.toLocaleString()}
-            </p>
+              <div className="text-right">
+                <p className="text-xs font-semibold text-slate-400">
+                  Potential value
+                </p>
+                <p className="mt-2 text-2xl font-semibold text-amber-400">
+                  CHF {inquiry.potentialValue.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </section>
 
-            <p>
-              <strong>Contact:</strong> {fallback(inquiry.contactPerson)}
-            </p>
+          <section className="grid gap-4 border-t border-slate-800 pt-4 text-sm">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                  <Tag className="h-4 w-4" />
+                  Event type
+                </div>
+                <p className="font-medium text-slate-100">
+                  {fallback(inquiry.eventType)}
+                </p>
+              </div>
 
-            <div>
-              <strong>Phase:</strong>
-              <select
-                value={inquiry.phase}
-                onChange={(event) => handlePhaseChange(event.target.value)}
-                disabled={loading}
-                className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
-              >
-                {phaseOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                  <Mail className="h-4 w-4" />
+                  Contact person
+                </div>
+                <p className="font-medium text-slate-100">
+                  {fallback(inquiry.contactPerson)}
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                  <CalendarDays className="h-4 w-4" />
+                  Event date
+                </div>
+                <p className="font-medium text-slate-100">
+                  {formatAbsolute(inquiry.eventDate)}
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                  <Users className="h-4 w-4" />
+                  Guest count
+                </div>
+                <p className="font-medium text-slate-100">
+                  {inquiry.guestCount} guests
+                </p>
+              </div>
             </div>
 
-            <div>
-              <strong>Hotels:</strong>
-              {inquiry.hotels && inquiry.hotels.length > 0 ? (
-                <ul className="list-disc list-inside ml-2">
-                  {inquiry.hotels.map((h) => (
-                    <li key={h}>{h}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="ml-2 text-slate-500">None</p>
-              )}
+            <div className="border-t border-slate-800 pt-4">
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                <Hotel className="h-4 w-4" />
+                Associated hotels
+              </div>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {inquiry.hotels && inquiry.hotels.length > 0 ? (
+                  inquiry.hotels.map((hotel) => (
+                    <span
+                      key={hotel}
+                      className="rounded-full border border-slate-800 bg-slate-900 px-3 py-1 text-xs font-medium text-slate-200"
+                    >
+                      {hotel}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-sm text-slate-500">None</span>
+                )}
+              </div>
             </div>
 
-            <div>
-              <strong>Notes:</strong>
-              <p>{fallback(inquiry.notes)}</p>
-            </div>
-
-            <div className="pt-2 border-t border-slate-800">
-              <p>
-                <strong>Created:</strong> {formatAbsolute(inquiry.createdAt)}
+            <div className="border-t border-slate-800 pt-4">
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                <CircleDollarSign className="h-4 w-4" />
+                Notes
+              </div>
+              <p className="mt-2 text-sm text-slate-300">
+                {fallback(inquiry.notes)}
               </p>
-              <p>
-                <strong>Updated:</strong> {formatSmartDate(inquiry.updatedAt)}
-              </p>
             </div>
-          </div>
 
-          <DialogFooter>
-            <button
-              onClick={() => setOpen(false)}
-              className="px-4 py-2 bg-slate-900 text-white rounded hover:bg-slate-700 transition"
-            >
-              Close
-            </button>
-          </DialogFooter>
+            <div className="flex flex-col justify-between gap-2 border-t border-slate-800 pt-4 text-xs text-slate-400 sm:flex-row">
+              <span>Created: {formatAbsolute(inquiry.createdAt)}</span>
+              <span>Updated: {formatSmartDate(inquiry.updatedAt)}</span>
+            </div>
+          </section>
         </DialogContent>
       </Dialog>
     </>

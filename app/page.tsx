@@ -1,4 +1,5 @@
 import { KanbanBoard } from "@/components/KanbanBoard/KanbanBoard";
+import { InquiriesProvider } from "@/lib/inquiriesClientStore";
 
 export default function HomePage() {
   return (
@@ -13,7 +14,9 @@ export default function HomePage() {
       </header>
 
       <section className="px-6 py-6">
-        <KanbanBoard />
+        <InquiriesProvider>
+          <KanbanBoard />
+        </InquiriesProvider>
       </section>
     </main>
   );

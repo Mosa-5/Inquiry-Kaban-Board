@@ -23,6 +23,13 @@ export interface Inquiry {
 
 export type FallbackValue = string | number | string[] | null | undefined;
 
+export interface InquiryFilters {
+  client?: string;
+  minValue?: number;
+  startDate?: string;
+  endDate?: string;
+}
+
 export interface ColumnProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   inquiries: Inquiry[];

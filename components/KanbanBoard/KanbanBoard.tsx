@@ -1,11 +1,10 @@
 "use client";
 
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
-import { useState } from "react";
-import { mockInquiries } from "@/data";
 import { Column } from "./Column";
 import { CardWithDialog } from "./CardWithDialog";
 import type { InquiryPhase } from "@/types";
+import { useInquiriesStore } from "@/lib/inquiriesClientStore";
 
 const phases: { key: InquiryPhase; label: string }[] = [
   { key: "new", label: "New" },
@@ -15,7 +14,7 @@ const phases: { key: InquiryPhase; label: string }[] = [
 ];
 
 export function KanbanBoard() {
-  const [inquiries, setInquiries] = useState(mockInquiries);
+  const { inquiries, loading, error, updatePhase } = useInquiriesStore();
 
   const handleDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -29,17 +28,19 @@ export function KanbanBoard() {
       return;
     }
 
-    setInquiries((prev) =>
-      prev.map((inq) =>
-        inq.id === draggableId
-          ? { ...inq, phase: destination.droppableId as InquiryPhase }
-          : inq
-      )
-    );
+    updatePhase(draggableId, destination.droppableId as InquiryPhase);
   };
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
+      {error && (
+        <div className="mb-4 rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          {error}
+        </div>
+      )}
+      {loading && (
+        <div className="mb-4 text-sm text-slate-400">Loading inquiries...</div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {phases.map((phase) => {
           const items = inquiries.filter((inq) => inq.phase === phase.key);

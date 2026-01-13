@@ -22,6 +22,8 @@ interface InquiriesState {
 interface InquiriesActions {
   refresh: () => Promise<void>;
   setFilters: (next: InquiryFilters) => void;
+  setAllFilters: (next: InquiryFilters) => void;
+  clearFilters: () => void;
   updatePhase: (id: string, phase: InquiryPhase) => Promise<void>;
 }
 
@@ -83,6 +85,14 @@ export function InquiriesProvider({ children }: { children: ReactNode }) {
     setFiltersState((prev) => ({ ...prev, ...next }));
   }, []);
 
+  const setAllFilters = useCallback((next: InquiryFilters) => {
+    setFiltersState(next);
+  }, []);
+
+  const clearFilters = useCallback(() => {
+    setFiltersState({});
+  }, []);
+
   const updatePhase = useCallback(
     async (id: string, phase: InquiryPhase) => {
       const snapshot = inquiries;
@@ -121,9 +131,21 @@ export function InquiriesProvider({ children }: { children: ReactNode }) {
       filters,
       refresh,
       setFilters,
+      setAllFilters,
+      clearFilters,
       updatePhase,
     }),
-    [inquiries, loading, error, filters, refresh, setFilters, updatePhase]
+    [
+      inquiries,
+      loading,
+      error,
+      filters,
+      refresh,
+      setFilters,
+      setAllFilters,
+      clearFilters,
+      updatePhase,
+    ]
   );
 
   return (

@@ -1,5 +1,5 @@
 import { Inquiry } from "@/types/";
-import { Card } from "./Card";
+import { CardWithDialog } from "./CardWithDialog";
 
 interface ColumnProps {
   title: string;
@@ -14,7 +14,7 @@ export function Column({ title, inquiries }: ColumnProps) {
 
       <div className="flex flex-col gap-3">
         {inquiries.map((inq) => (
-          <Card key={inq.id} inquiry={inq} />
+          <CardWithDialog key={inq.id} inquiry={inq} />
         ))}
       </div>
     </div>

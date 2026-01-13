@@ -18,3 +18,5 @@ export interface Inquiry {
   createdAt: string;
   updatedAt: string;
 }
+
+export type FallbackValue = string | number | string[] | null | undefined;

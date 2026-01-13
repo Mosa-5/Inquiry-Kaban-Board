@@ -37,7 +37,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-md border border-slate-800 bg-slate-950 text-slate-100 shadow-md",
+        "z-50 min-w-32 overflow-hidden rounded-md border border-slate-800 bg-slate-950 text-slate-100 shadow-md",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
         className

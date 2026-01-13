@@ -125,7 +125,7 @@ export function FilterPanel({ initialFilters }: FilterPanelProps) {
                 <Button
                   variant="outline"
                   id="start-date"
-                  className="h-10 w-full cursor-pointer justify-between border-slate-800 bg-slate-950 text-slate-200 hover:bg-slate-900 hover:text-slate-200 sm:w-[220px]"
+                  className="h-10 w-full cursor-pointer justify-between border-slate-800 bg-slate-950 text-slate-200 hover:bg-slate-900 hover:text-slate-200 sm:w-55"
                 >
                   <span className="flex items-center gap-2">
                     <CalendarDays className="h-4 w-4 text-slate-500" />
@@ -165,7 +165,7 @@ export function FilterPanel({ initialFilters }: FilterPanelProps) {
                 <Button
                   variant="outline"
                   id="end-date"
-                  className="h-10 w-full cursor-pointer justify-between border-slate-800 bg-slate-950 text-slate-200 hover:bg-slate-900 hover:text-slate-200 sm:w-[220px]"
+                  className="h-10 w-full cursor-pointer justify-between border-slate-800 bg-slate-950 text-slate-200 hover:bg-slate-900 hover:text-slate-200 sm:w-55"
                 >
                   <span className="flex items-center gap-2">
                     <CalendarDays className="h-4 w-4 text-slate-500" />
@@ -198,7 +198,7 @@ export function FilterPanel({ initialFilters }: FilterPanelProps) {
               </PopoverContent>
             </Popover>
 
-            <div className="flex w-full items-center gap-2 rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 sm:w-[160px]">
+            <div className="flex w-full items-center gap-2 rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 sm:w-40">
               <Filter className="h-4 w-4 text-slate-500" />
               <Input
                 id="min-value"

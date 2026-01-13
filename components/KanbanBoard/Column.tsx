@@ -16,7 +16,7 @@ export const Column = React.forwardRef<HTMLDivElement, ColumnProps>(
       <div
         ref={ref}
         className={cn(
-          "flex flex-col rounded-xl min-h-[320px] border border-slate-800 p-4 transition",
+          "flex flex-col rounded-xl min-h-80 border border-slate-800 p-4 transition",
           isDraggingOver ? "bg-slate-800/80" : "bg-slate-900",
           className
         )}

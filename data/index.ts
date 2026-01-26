@@ -1,7 +1,7 @@
 import { Inquiry } from "@/types";
 
 export const mockInquiries: Inquiry[] = [
-  // 1 - NEW (updated: 1 day ago)
+  // updated: 1 day ago
   {
     id: "INQ-2026-0001",
     clientName: "Acme Corporation",
@@ -17,7 +17,7 @@ export const mockInquiries: Inquiry[] = [
     updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
   },
 
-  // 2 - SENT TO HOTELS (updated: 3 days ago, high-value)
+  // updated: 3 days ago, high-value
   {
     id: "INQ-2026-0002",
     clientName: "Global Ventures",
@@ -25,7 +25,7 @@ export const mockInquiries: Inquiry[] = [
     eventType: "Incentive Trip",
     eventDate: "2026-05-20",
     guestCount: 40,
-    potentialValue: 120000, // high value
+    potentialValue: 120000,
     phase: "sent_to_hotels",
     hotels: ["Mountain View Lodge"],
     notes: "VIP group with wellness requirements.",
@@ -33,7 +33,7 @@ export const mockInquiries: Inquiry[] = [
     updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
   },
 
-  // 3 - OFFERS RECEIVED (updated: 5 hours ago, high-value)
+  // updated: 5 hours ago, high-value
   {
     id: "INQ-2026-0003",
     clientName: "TechStars Meetup",
@@ -41,7 +41,7 @@ export const mockInquiries: Inquiry[] = [
     eventType: "Networking Event",
     eventDate: "2026-02-18",
     guestCount: 80,
-    potentialValue: 65000, // high value
+    potentialValue: 65000,
     phase: "offers_received",
     hotels: ["Riverside Hotel", "Urban Loft"],
     notes: "Requires stage and sound system.",
@@ -49,7 +49,7 @@ export const mockInquiries: Inquiry[] = [
     updatedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
   },
 
-  // 4 - COMPLETED (updated: less than a minute ago, high-value)
+  // updated: less than a minute ago, high-value
   {
     id: "INQ-2026-0004",
     clientName: "Family Wedding - Klein",
@@ -57,12 +57,12 @@ export const mockInquiries: Inquiry[] = [
     eventType: "Wedding",
     eventDate: "2026-06-12",
     guestCount: 150,
-    potentialValue: 90000, // high value
+    potentialValue: 90000,
     phase: "completed",
     hotels: ["Lakeside Resort"],
     notes: "Outdoor ceremony with buffet dinner.",
     createdAt: "2025-12-28T08:45:00.000Z",
-    updatedAt: new Date(Date.now()).toISOString(), // right now
+    updatedAt: new Date(Date.now()).toISOString(),
   },
 
   {
@@ -77,7 +77,7 @@ export const mockInquiries: Inquiry[] = [
     hotels: ["City Center Hotel"],
     notes: "Needs LED wall and media coverage.",
     createdAt: "2026-01-05T10:00:00.000Z",
-    updatedAt: "2025-12-20T09:30:00.000Z"  // OLD DATE -> should show absolute date
+    updatedAt: "2025-12-20T09:30:00.000Z"  // OLD DATE, should show absolute date
   },
 
   {
